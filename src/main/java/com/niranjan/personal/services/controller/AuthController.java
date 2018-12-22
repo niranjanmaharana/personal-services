@@ -11,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +20,6 @@ import com.niranjan.personal.services.exception.DuplicateFieldException;
 import com.niranjan.personal.services.exception.InvalidFormatException;
 import com.niranjan.personal.services.jwt.security.JwtProvider;
 import com.niranjan.personal.services.model.UserProfile;
-import com.niranjan.personal.services.repository.RoleRepository;
-import com.niranjan.personal.services.repository.UserRepository;
 import com.niranjan.personal.services.request.view.AuthRequest;
 import com.niranjan.personal.services.request.view.UserRequestView;
 import com.niranjan.personal.services.response.view.JwtResponse;
@@ -33,27 +30,14 @@ import io.swagger.annotations.Api;
 
 @Api(value = "Organization", description = "Operations pertaining to login and logout.")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/noauth")
 public class AuthController {
-
 	@Autowired
-	AuthenticationManager authenticationManager;
-
+	private AuthenticationManager authenticationManager;
 	@Autowired
 	private UserService userService;
-	
 	@Autowired
-	UserRepository userRepository;
-
-	@Autowired
-	RoleRepository roleRepository;
-
-	@Autowired
-	PasswordEncoder encoder;
-
-	@Autowired
-	JwtProvider jwtProvider;
-
+	private JwtProvider jwtProvider;
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	@PostMapping("/signin")

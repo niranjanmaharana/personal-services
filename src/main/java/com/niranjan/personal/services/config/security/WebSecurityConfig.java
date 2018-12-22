@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private static final String[] AUTH_WHITELIST = {
 			//unauthorized end points
-			"/api/auth/**", "/login/**", "/reset/**",
+			"/noauth/**",
             // -- swagger ui
             "/v2/api-docs",
             "/swagger-resources",
