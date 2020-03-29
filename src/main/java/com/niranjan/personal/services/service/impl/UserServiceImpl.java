@@ -74,6 +74,11 @@ public class UserServiceImpl implements UserService{
 			throw new DuplicateFieldException("Email already exists !");
 		}
 		
+		if (userRepository.existsByMobile(request.getMobile())) {
+			logger.error("Duplicate mobile number found !");
+			throw new DuplicateFieldException("Mobile number already registered !");
+		}
+		
 		if (!passwordValidator.isValid(request.getPassword())) {
 			logger.error("Invalid password format !");
 			throw new InvalidFormatException(invalidPasswordMessage);

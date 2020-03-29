@@ -34,24 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailsService userDetailsService;
 	@Autowired
 	private JwtAuthEntryPoint unauthorizedHandler;
-	@Value("#{'${allowedOrigins}'.split(',')}")
+	@Value("#{'${allowed.origins}'.split(',')}")
 	private List<String> allowedOrigins;
-	@Value("#{'${allowedHeaders}'.split(',')}")
+	@Value("#{'${allowed.headers}'.split(',')}")
 	private List<String> allowedHeaders;
+	@Value("#{'${whitelist}'.split(',')}")
+	private List<String> whiteListUrls;
 	
-	private static final String[] AUTH_WHITELIST = {
-			//unauthorized end points
-			"/noauth/**",
-            // -- swagger ui
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**"
-    };
-
 	@Bean
 	public JwtAuthTokenFilter authenticationJwtTokenFilter() {
 		return new JwtAuthTokenFilter();
@@ -70,14 +59,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder;
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
 		
-		.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().anyRequest()
+		.authorizeRequests().antMatchers(whiteListUrls.toArray(new String[0])).permitAll().anyRequest()
 				.authenticated().and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

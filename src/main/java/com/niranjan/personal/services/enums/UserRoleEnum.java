@@ -7,10 +7,12 @@ public enum  UserRoleEnum {
 	
 	private int id;
 	private String name;
+	
 	private UserRoleEnum(int id, String name){
 		this.id = id;
 		this.name = name;
 	}
+	
 	public static UserRoleEnum getById(int id){
 		return UserRoleEnum.values()[id];
 	}
